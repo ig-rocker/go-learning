@@ -1,0 +1,23 @@
+SOLID Priciple->
+
+S-> Single Object Priciple
+O-> Open Close Principle
+L-> Liksov Substitution Priciple
+I-> Interface Segregation Priciple
+D-> Dependency Inversion Priciple
+
+
+1. A class should only have responsibilty, so it should have one reason to change.
+
+2. A class should be Open for extension but should be closed for the Modification. 
+    By applying this, we stop ourselves from modifying existing codebase and causing potential bugs.
+
+3. It states that if class A is a subtype of class B,  
+    we should able to replace the B with A without disrupting the behaviour of the program.
+    This one is the most difficult method to apply.
+
+4. Interface Segregation means large iterface should be split into the small ones. 
+    By doing so, we can ensure that implementing classes only needs tobe concerned about the method of their intrest.
+
+5. This Priciple of Dependency Inversion refers to trhe decoupling of software modules. 
+    This way, instead of high level modules depending on the low-level module, both will depend on abstractions.
