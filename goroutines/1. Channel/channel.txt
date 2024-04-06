@@ -1,0 +1,77 @@
+Channel is used for the communication between the multiple goroutines.
+It has two part, 1. Sender and 2. Receiver
+
+Declare:  ch:=make(chan int)
+Sender ch<-34
+Receiver res:=<-ch
+
+Conditions for Unbuffered Channel:
+1. If we are trying to send and receive the channel value within main function,
+   it will throw the error -->> all goroutines are asleep - deadlock!
+
+2. When we sent data to the channel from func1 and channel in func2 is listening to it.
+    then only all the lines in the func1 will executed below it else channel will wait for 
+    someone to listen to it. 
+
+    Example:
+    a. When we have unequal amount of the sender & Receiver
+        1-> when sender is there but no receive
+            =>Multiply will send the data and wait till someone recieve the data
+            Here, there is no receiver , so it will not execute below lines. 
+        
+            func Multiply(n int, ch chan int) {
+                res := n * 23
+                ch <- res
+                fmt.Println("end")
+            } 
+            func main(){
+                ch:=make(chan int)
+                go Multiply(3, ch)
+                time.Sleep(time.Second*2)
+            }
+
+
+        2->When receiver is there but no sender or receiver>sender
+            then ERROR:   all goroutines are asleep - deadlock!
+
+        3. If there is two time we fire the same goroutine and reading the same channel
+            if in case it have the unequal receiver, it can have ambiguous value
+            else it will have print everything.
+
+            func Multiply(n int, ch chan int) {
+                fmt.Printf("value of n  %v", n)
+                res := n * 23
+                ch <- res
+                ch <- 3434
+                fmt.Println("End")
+
+            }
+            func main() {
+                ch := make(chan int)
+                go Multiply(33, ch)
+                go Multiply(1, ch)
+                ch1 := <-ch
+                ch2 := <-ch
+                ch3 := <-ch
+                ch4 := <-ch
+                fmt.Println("ch1", ch1)
+                fmt.Println("ch2", ch2)
+                fmt.Println("ch3", ch3)
+                fmt.Println("ch4", ch4)
+
+                time.Sleep(time.Second * 5)
+
+
+        
+    b. When there is equal number of the receiver & sender,
+        All lines will be executed.
+
+
+Buffered Channel:  ch:=make(chan string 10)
+    * Have a specified capacity more than 0
+    * When a sender sends data to a buffered channel, it stores the data in the channel's buffer if there is space available.
+      If the buffer is full, the sender blocks until space becomes available.
+    * When a receiver attempts to receive data from a buffered channel, it reads data from the buffer if it's available. 
+      If the buffer is empty, the receiver blocks until data becomes available.
+    * Useful in case we dont want the decouple sender and Receiver in terms of synchronisation &
+      want to minimise the blocking where there might be the burst of the data
