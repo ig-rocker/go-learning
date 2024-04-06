@@ -14,6 +14,8 @@ func Multiply(n int, ch chan int) {
 
 }
 func main() {
+
+	// go BufferedChannel()
 	ch := make(chan int)
 	go Multiply(33, ch)
 	go Multiply(1, ch)
