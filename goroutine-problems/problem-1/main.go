@@ -25,6 +25,7 @@ func GenerateRandomNum() {
 
 func IsEvenOdd(n int, ch chan bool) {
 	ch1 := make(chan int)
+	
 	if n%2 == 0 {
 		go EvenNumber(n, ch1)
 		<-ch
@@ -48,3 +49,8 @@ func main() {
 	go GenerateRandomNum()
 	time.Sleep(time.Second * 2)
 }
+
+
+
+//2nd approach
+
