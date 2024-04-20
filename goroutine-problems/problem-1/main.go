@@ -2,55 +2,57 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
-	"time"
+	"sync"
 )
 
-/*
-Problem: We have to create 4 goroutines which have
-1-> it need to generate random number
-2 -> find out the number is even/odd
-3 -> print even number
-4 -> print odd number
-*/
+var (
+	even chan int
+	odd  chan int
+	ch   chan int
+	wg   sync.WaitGroup
+)
 
-func GenerateRandomNum() {
-	num := rand.Intn(100)
-	fmt.Println("num", num)
-
-	ch := make(chan bool)
-	go IsEvenOdd(num, ch)
-	<-ch
-}
-
-func IsEvenOdd(n int, ch chan bool) {
-	ch1 := make(chan int)
-	
-	if n%2 == 0 {
-		go EvenNumber(n, ch1)
-		<-ch
-	} else {
-		go OddNumber(n, ch1)
-		<-ch
+func GenerateNum() {
+	defer wg.Done()
+	for i := 0; i < 10; i++ {
+		ch <- i
 	}
-	ch <- true
 }
 
-func EvenNumber(n int, ch chan int) {
-	fmt.Println("Number is Even", n)
-	ch <- 1
+func IsEvenOrOdd() {
+	for {
+		num := <-ch
+		if num%2 == 0 {
+			even <- num
+		} else {
+			odd <- num
+		}
+	}
 }
-func OddNumber(n int, ch chan int) {
-	fmt.Println("Number is Odd", n)
-	ch <- 1
+
+func EvenNum() {
+	for {
+		num := <-even
+		fmt.Println("Number is even", num)
+	}
+}
+
+func OddNum() {
+	for {
+		fmt.Println("Number is odd", <-odd)
+	}
 }
 
 func main() {
-	go GenerateRandomNum()
-	time.Sleep(time.Second * 2)
+
+	even = make(chan int)
+	odd = make(chan int)
+	ch = make(chan int, 5)
+	wg.Add(1)
+	go GenerateNum()
+	go IsEvenOrOdd()
+	go EvenNum()
+	go OddNum()
+	// time.Sleep(time.Second * 10)
+	wg.Wait()
 }
-
-
-
-//2nd approach
-
