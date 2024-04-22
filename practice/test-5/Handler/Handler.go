@@ -30,8 +30,16 @@ func (i *Handler)AddEmployee(c *gin.Context){
     c.JSON(http.StatusOK, gin.H{"message":"Employee added Sucessfully"})
 }
 
-func (i *Handler)GetEmployee(*gin.Context){
-    var 
+func (i *Handler)GetEmployee(c *gin.Context){
+    data, err:= i.IService.GetEmployee("121")
+
+    if err !=nil{
+        c.JSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, data)
+
 }
 
 

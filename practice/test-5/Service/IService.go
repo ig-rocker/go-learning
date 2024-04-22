@@ -22,7 +22,6 @@ func (s *Service)GetEmployee(id string)(model.Request,error){
 }
 
 
-
 type IService interface { 
     AddEmployee(model.Request) error 
     GetEmployee(string) (model.Request, error) 
