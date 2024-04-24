@@ -7,7 +7,12 @@ import (
 
 func Run() {
 
-	http.Get("/")
+
+	http.HandleFunc("/",(w http.Writer, r *http.Request){
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte{"Welcome to Home Page"})
+		return
+	})
 
 
 
