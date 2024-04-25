@@ -2,11 +2,11 @@ package datastore
 
 import "customError"
 type IBookstore interface{
-	AddBook(models.Book)error
-	GetBookCollections()models.BookCollection
-	GetBookByID(string)models.Book
-	UpdateBook(models.Book)(models.Book,error)
-	DeleteBook(string)error
+	Add(models.Book)error
+	Getcollection()models.BookCollection
+	GetID(string)models.Book
+	// UpdateBook(models.Book)(models.Book,error)
+	// DeleteBook(string)error
 }
 
 
@@ -14,22 +14,27 @@ type Bookstore struct{
 	models.BookCollection
 }
 
-func (bs *Bookstore)AddBook(b models.Book)(error){
+func (bs *Bookstore)Add(b models.Book)(error){
 	if _,ok:=bs.BookCollection[b.ID];ok{
 		err:= customError.BookAlreadyExist{Message:"Already ID exist"}
-		return err.Error()
+		return err
 	}
 	bs.BookCollection[b.ID]=b
 	return nil
 }
 
-func (bs *Bookstore)GetBookCollections()models.BookCollection{
+func (bs *Bookstore)Getcollections()models.BookCollection{
 	return bs.BookCollection
 }
 
-func(bs *Bookstore)GetBookByID(id string)models.Book{
+func(bs *Bookstore)GetID(id string)(models.Book, error){
 
-	value, ok:=bs.BookCollection[]
+	value, ok:=bs.BookCollection.collection[id]
+	if !ok{
+		err:=customError.BookNotExist{ID:id}
+		return nil,err
+	}
+	return value, nil
 
 }
 
